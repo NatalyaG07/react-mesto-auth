@@ -1,11 +1,11 @@
 import React, {  useState } from 'react';
 import { Link, useHistory} from 'react-router-dom';
 import '../index.css';
-import * as auth from './Auth';
+import * as auth from '../utils/Auth';
 
 // import InfoTooltip from "./InfoTooltip";
 
-function Register(props) {
+function Register({ setServiceResponse, onInfoTooltipPopupOpen }) {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,17 +17,17 @@ function Register(props) {
 
     auth.register(email, password).then((res) => {
       if(res){
-        debugger
-        props.setServiceResponse(true);
-        props.onInfoTooltipPopupOpen();
+        setServiceResponse(true);
+        onInfoTooltipPopupOpen();
         history.push('/sign-in');
         resetForm();
       } else {
-        props.onInfoTooltipPopupOpen();
+        onInfoTooltipPopupOpen();
       }
     })
     .catch((err) => {
       console.log(err);
+      onInfoTooltipPopupOpen();
     });
   }
 
@@ -72,8 +72,6 @@ function Register(props) {
           <Link to="/sign-in" className="login__link">Войти</Link>
         </div>
       </div>
-
-      {/* <InfoTooltip isOpen={props.isOpen} onClose={props.onClose} serviceResponse={serviceResponse} /> */}
     </div>
   )
 }

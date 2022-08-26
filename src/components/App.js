@@ -3,7 +3,7 @@ import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
 import "../index.css";
 import { api } from "../utils/api";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import * as auth from './Auth';
+import * as auth from '../utils/Auth';
 
 import Header from "./Header";
 import Main from "./Main";
@@ -19,29 +19,29 @@ import ProtectedRoute from "./ProtectedRoute";
 import InfoTooltip from "./InfoTooltip";
 
 function App() {
-  const [isEditProfilePopupOpen, satIsEditProfilePopupOpen] = useState(false);
-  const [isAddPlacePopupOpen, satIsAddPlacePopupOpen] = useState(false);
-  const [isEditAvatarPopupOpen, satIsEditAvatarPopupOpen] = useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userData, setUserData] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const [isInfoTooltipPopupOpen, setIsInfoTooltip] = useState(false);
   const [serviceResponse, setServiceResponse] = useState(false);
 
   const history = useHistory();
 
   function handleEditProfileClick() {
-    satIsEditProfilePopupOpen(true);
+    setIsEditProfilePopupOpen(true);
   }
 
   function handleAddPlaceClick() {
-    satIsAddPlacePopupOpen(true);
+    setIsAddPlacePopupOpen(true);
   }
 
   function handleEditAvatarClick() {
-    satIsEditAvatarPopupOpen(true);
+    setIsEditAvatarPopupOpen(true);
   }
 
   function handleInfoTooltipPopupOpen() {
@@ -49,16 +49,13 @@ function App() {
   }
 
   function handleCardClick(card) {
-    setSelectedCard({
-      link: card.link,
-      name: card.name,
-    });
+    setSelectedCard({...card});
   }
 
   function closeAllPopups() {
-    satIsEditProfilePopupOpen(false);
-    satIsAddPlacePopupOpen(false);
-    satIsEditAvatarPopupOpen(false);
+    setIsEditProfilePopupOpen(false);
+    setIsAddPlacePopupOpen(false);
+    setIsEditAvatarPopupOpen(false);
     setIsInfoTooltip(false);
     setServiceResponse(false);
     setSelectedCard({});
@@ -73,7 +70,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [loggedIn]);
 
   function handleUpdateUser({ name, about: description }) {
     api
@@ -111,7 +108,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [loggedIn]);
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
@@ -153,39 +150,43 @@ function App() {
       });
   }
 
-  function handleLogin() {
-    if(!loggedIn) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
+  function toggleIsLoggedIn() {
+    setLoggedIn(isLogged => !isLogged);
   }
 
-  function tokenCheck() {
-    if(localStorage.getItem("jwt")) {
-      let jwt = localStorage.getItem('jwt');
+  function checkToken() {
+    const jwt = localStorage.getItem('jwt');
+    if(jwt) {
       auth.checkToken(jwt).then((res) => {
         if(res) {
-          setUserData(res.data.email);
+          setUserEmail(res.data.email);
           setLoggedIn(true);
           history.push("/");
+        } else {
+          localStorage.removeItem("jwt");
         }
+      })
+      .catch((err) => {
+        console.log(err);
       });
     }
   };
   
   useEffect(() => {
-    tokenCheck();
-  }, [userData, loggedIn]);
+    checkToken();
+  }, []);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header userData={userData} handleLogin={handleLogin}/>
+        <Header userData={userEmail} handleLogin={toggleIsLoggedIn}/>
 
         <Switch>
           <Route path="/sign-in">
-            <Login handleLogin={handleLogin}/>
+            <Login 
+              handleLogin={toggleIsLoggedIn} 
+              onInfoTooltipPopupOpen={handleInfoTooltipPopupOpen}
+            />
           </Route>
 
           <Route path="/sign-up">

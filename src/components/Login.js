@@ -1,9 +1,9 @@
 import React, {  useState } from 'react';
 import { useHistory} from 'react-router-dom';
-import * as auth from './Auth';
+import * as auth from '../utils/Auth';
 import '../index.css';
 
-function Login(props) {
+function Login({ handleLogin, onInfoTooltipPopupOpen }) {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,20 +18,22 @@ function Login(props) {
     }
     auth.authorize(email, password)
     .then((data) => {
-      if(!data) {
-        console.log("Что-то пошло не так!");
+      if(data.message) {
+        onInfoTooltipPopupOpen();
+        console.log(data.message);
       }
       
       if(data.token) {
         setEmail('');
         setPassword('');
-        props.handleLogin();
+        handleLogin();
         history.push("/");
         resetForm();
       }
     })
     .catch((err) => {
       console.log(err);
+      onInfoTooltipPopupOpen();
     });
   }
 

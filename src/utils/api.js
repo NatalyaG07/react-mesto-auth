@@ -6,59 +6,51 @@
 
   //Загрузка информации о пользователе с сервера
   getUserInfo() { 
-      return fetch(`${this._baseUrl}/users/me`, { 
-        method: 'GET',
-        headers: this._headers
-      })
+    return fetch(`${this._baseUrl}/users/me`, { 
+      method: 'GET',
+      headers: this._headers
+    })
 
-      .then((res) => {
-        return this._testStatus(res)
-      }) 
+    .then(this._testStatus);
   };
 
   //Загрузка карточек с сервера
   getInitialCards() {
-      return fetch(`${this._baseUrl}/cards`, {
-        method: 'GET',
-        headers: this._headers
-      })
+    return fetch(`${this._baseUrl}/cards`, {
+      method: 'GET',
+      headers: this._headers
+    })
 
-      .then((res) => {
-          return this._testStatus(res)
-      }) 
-  }
+    .then(this._testStatus); 
+  };
 
   //Редактирование профиля
   editProfile(data) {
-      return fetch(`${this._baseUrl}/users/me`, {
-        method: 'PATCH',
-        headers: this._headers,
-        body: JSON.stringify({
-            name: data.name,
-            about: data.about
-          })
-      })
+    return fetch(`${this._baseUrl}/users/me`, {
+      method: 'PATCH',
+      headers: this._headers,
+      body: JSON.stringify({
+          name: data.name,
+          about: data.about
+        })
+    })
 
-      .then((res) => {
-          return this._testStatus(res)
-      }) 
-    }
+    .then(this._testStatus);
+  };
 
   //Добавление новой карточки
   addCard(data) {
-      return fetch(`${this._baseUrl}/cards`, {
-        method: 'POST',
-        headers: this._headers,
-        body: JSON.stringify({
-          name: data.name,
-          link: data.link
-        })
+    return fetch(`${this._baseUrl}/cards`, {
+      method: 'POST',
+      headers: this._headers,
+      body: JSON.stringify({
+        name: data.name,
+        link: data.link
       })
+    })
 
-      .then((res) => {
-        return this._testStatus(res)
-      }) 
-  }
+    .then(this._testStatus); 
+  };
 
   //Удаление карточки
   removeCard(cardId) {
@@ -67,34 +59,8 @@
       headers: this._headers
     })
 
-    .then((res) => {
-      return this._testStatus(res)
-    }) 
+    .then(this._testStatus); 
   };
-
-  // //Постановка лайка
-  // addLike(cardId) {
-  //   return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
-  //     method: 'PUT', 
-  //     headers: this._headers,
-  //   })
-
-  //   .then((res) => {
-  //     return this._testStatus(res)
-  //   }) 
-  // };
-
-  // //Удаление лайка
-  // removeLike(cardId) {
-  //   return fetch(`${this._baseUrl}/cards/${cardId}/likes`, { 
-  //     method: 'DELETE', 
-  //     headers: this._headers,
-  //   })
-
-  //   .then((res) => {
-  //     return this._testStatus(res)
-  //   })
-  // };
 
   changeLikeCardStatus(cardId, isLiked) {
     return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
@@ -102,9 +68,7 @@
       headers: this._headers,
     })
 
-    .then((res) => {
-      return this._testStatus(res)
-    })
+    .then(this._testStatus);
   };
 
   //Редактирование аватара
@@ -117,9 +81,7 @@
       })
     })
 
-    .then((res) => {
-      return this._testStatus(res)
-    })
+    .then(this._testStatus);
   };
 
   //Проверка на ошибку
