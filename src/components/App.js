@@ -62,7 +62,8 @@ function App() {
   }
 
   useEffect(() => {
-    api
+    if(loggedIn) {
+      api
       .getUserInfo()
       .then((userData) => {
         setCurrentUser(userData);
@@ -70,6 +71,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+    }
   }, [loggedIn]);
 
   function handleUpdateUser({ name, about: description }) {
@@ -100,7 +102,8 @@ function App() {
   }
 
   useEffect(() => {
-    api
+    if(loggedIn) {
+      api
       .getInitialCards()
       .then((cards) => {
         setCards(cards);
@@ -108,6 +111,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+    }
   }, [loggedIn]);
 
   function handleCardLike(card) {
@@ -179,7 +183,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header userData={userEmail} handleLogin={toggleIsLoggedIn}/>
+        <Header userEmail={userEmail} handleLogin={toggleIsLoggedIn} />
 
         <Switch>
           <Route path="/sign-in">

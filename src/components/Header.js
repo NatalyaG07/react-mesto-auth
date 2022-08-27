@@ -3,7 +3,7 @@ import { Route, Switch, Link} from 'react-router-dom';
 import '../index.css';
 import logo from '../images/logo.svg';
 
-function Header({ handleLogin, userData }) {
+function Header({ handleLogin, userEmail }) {
 
   function signOut() {
     localStorage.removeItem("jwt");
@@ -16,7 +16,7 @@ function Header({ handleLogin, userData }) {
         <Switch>
           <Route exact path="/">
             <div className="header__info-box">
-              <p className="header__user-mail">{userData}</p>
+              <p className="header__user-mail">{userEmail}</p>
               <Link className="header__link-exit" to="/sign-in" onClick={signOut}>Выйти</Link>
             </div>
           </Route>
