@@ -190,6 +190,7 @@ function App() {
             <Login 
               handleLogin={toggleIsLoggedIn} 
               onInfoTooltipPopupOpen={handleInfoTooltipPopupOpen}
+              setUserEmail={setUserEmail}
             />
           </Route>
 

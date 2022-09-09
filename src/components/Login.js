@@ -3,7 +3,7 @@ import { useHistory} from 'react-router-dom';
 import * as auth from '../utils/Auth';
 import '../index.css';
 
-function Login({ handleLogin, onInfoTooltipPopupOpen }) {
+function Login({ handleLogin, onInfoTooltipPopupOpen, setUserEmail }) {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,6 +29,7 @@ function Login({ handleLogin, onInfoTooltipPopupOpen }) {
         handleLogin();
         history.push("/");
         resetForm();
+        setUserEmail(email);
       }
     })
     .catch((err) => {
